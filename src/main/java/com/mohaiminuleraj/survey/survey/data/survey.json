@@ -1,0 +1,47 @@
+{
+  "surveyName": "Customer Service Feedback",
+  "questions": [
+    {
+      "questionId": 1,
+      "questionText": "How satisfied are you with the overall customer service?",
+      "answerOptions": [
+        "Very Satisfied",
+        "Satisfied",
+        "Neutral",
+        "Dissatisfied",
+        "Very Dissatisfied"
+      ]
+    },
+    {
+      "questionId": 2,
+      "questionText": "Rate the responsiveness of our customer service representatives.",
+      "answerOptions": [
+        "Excellent",
+        "Good",
+        "Average",
+        "Poor",
+        "Very Poor"
+      ]
+    },
+    {
+      "questionId": 3,
+      "questionText": "Did the customer service representative address your concerns effectively?",
+      "answerOptions": [
+        "Yes, completely",
+        "Yes, to some extent",
+        "No"
+      ]
+    },
+    {
+      "questionId": 4,
+      "questionText": "How likely are you to recommend our customer service to others?",
+      "answerOptions": [
+        "Very Likely",
+        "Likely",
+        "Neutral",
+        "Unlikely",
+        "Very Unlikely"
+      ]
+    }
+  ]
+}
