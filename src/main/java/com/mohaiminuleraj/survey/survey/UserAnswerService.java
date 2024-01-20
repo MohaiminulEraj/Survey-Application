@@ -20,4 +20,9 @@ public class UserAnswerService {
         // Add validation logic if needed
         return userAnswerRepository.saveAll(userAnswers);
     }
+
+    public List<UserAnswer> getUserAnswers() {
+        // Add validation logic if needed
+        return userAnswerRepository.findAll();
+    }
 }

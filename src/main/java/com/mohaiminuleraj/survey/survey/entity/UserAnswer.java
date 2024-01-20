@@ -1,5 +1,6 @@
 package com.mohaiminuleraj.survey.survey.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mohaiminuleraj.survey.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,15 +19,18 @@ public class UserAnswer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @JsonBackReference // prevents the serialization of the back-reference to the Question entity.
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "question_id")
+    @JsonBackReference // prevents the serialization of the back-reference to the Question entity.
     private  Question question;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "answer_id")
+    @JsonBackReference // prevents the serialization of the back-reference to the Question entity.
     private Answer answer;
 }

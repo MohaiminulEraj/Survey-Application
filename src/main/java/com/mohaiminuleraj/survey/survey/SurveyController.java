@@ -1,5 +1,6 @@
 package com.mohaiminuleraj.survey.survey;
 
+import com.mohaiminuleraj.survey.config.JwtService;
 import com.mohaiminuleraj.survey.survey.dto.UserResponseDto;
 import com.mohaiminuleraj.survey.survey.entity.Answer;
 import com.mohaiminuleraj.survey.survey.entity.Question;
@@ -9,8 +10,10 @@ import com.mohaiminuleraj.survey.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.HandlerMapping;
 
 import java.util.List;
@@ -28,6 +31,9 @@ public class SurveyController {
     @Autowired
     private UserAnswerService userAnswerService;
 
+    @Autowired
+    private JwtService jwtService;
+
 
 //    @GetMapping
 //    public ResponseEntity<String> sayHello(){
@@ -38,6 +44,15 @@ public class SurveyController {
     public List<Question> getAllQuestionsWithAnswers() {
         return surveyService.getAllQuestions();
     }
+
+    @GetMapping("/all")
+//    public List<UserAnswer> getAllUserAnswersWithDetails() {
+//        return surveyService.getAllUserAnswersWithDetails();
+//    }
+    public List<User> getAllUserInfo() { return surveyService.getUsersInfo(); }
+//    public List<UserAnswer> getAllAnswers() { return userAnswerService.getUserAnswers(); }
+//    public String getAllAnswers() { return "Hellllloooooo!!!"; }
+
 
 //    @PostMapping("/{userId}/answer")
 //    public UserAnswer saveUserAnswer(
@@ -69,17 +84,17 @@ public class SurveyController {
             @RequestBody List<UserResponseDto> userResponses,
             HttpServletRequest request
     ) {
-        Integer userId = 1;
-        System.out.println("====Req-------");
-        System.out.println(request);
-        Integer userIdFromAttribute = (Integer) request.getAttribute("userId");
-        System.out.println("User ID from Request Attribute: " + userIdFromAttribute);
-        userIdFromAttribute = (Integer) request.getAttribute("id");
-        System.out.println("User ID from Request Attribute: " + userIdFromAttribute);
-        System.out.println("--------Req==========");
+        final String authHeader = request.getHeader("Authorization");
+        String jwt = authHeader.substring(7);
+        String userName = jwtService.extractUsername(jwt);
         // Fetch user entity from the database
-        User user = surveyService.getUserById(userId);
-        System.out.println(user);
+        User user = surveyService.getUserByEmail(userName);
+        if(user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found!");
+        }
+        if(!user.getUserAnswers().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You've already added your survey!");
+        }
         // Create a list to store UserAnswer entities
         List<UserAnswer> userAnswers = userResponses.stream()
                 .map(response -> createUserAnswer(user, response))

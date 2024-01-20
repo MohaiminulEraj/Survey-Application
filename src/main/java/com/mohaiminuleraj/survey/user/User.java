@@ -1,5 +1,8 @@
 package com.mohaiminuleraj.survey.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.mohaiminuleraj.survey.survey.entity.Answer;
 import com.mohaiminuleraj.survey.survey.entity.UserAnswer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,11 +27,14 @@ public class User implements UserDetails {
     private Integer id;
     private String name;
     private String address;
+    @Column(unique = true)
     private String email;
+    @Column(unique = true)
     private String mobile;
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = UserAnswer.class,  mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<UserAnswer> userAnswers;
 
     @Override
@@ -43,6 +49,11 @@ public class User implements UserDetails {
     public String getUserMobile() {
         return mobile;
     }
+
+//    public List<UserAnswer> getUserAnswer() {
+//        return userAnswers;
+//    }
+//    public void setUserAnswerList(List<UserAnswer> userAnswers) { this.userAnswers = userAnswers; }
 
     @Override
     public boolean isAccountNonExpired() {
